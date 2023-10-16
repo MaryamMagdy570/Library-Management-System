@@ -47,7 +47,7 @@ void main()
 	char password[4];
 	char mode,exit=0;
 	printf("Hello, Welcome to BookArray Management System\n");
-/*
+
 	Add_Book();
 		Print_Library();
 	Add_Book();
@@ -59,8 +59,8 @@ void main()
 	Delete_Book();
 	Print_Library();
 	
-	*/
-	while(!exit)
+	/*
+	while(1)
 	{
 		printf("Press 1 for administor mode, or 0 for user mode: ");
 		scanf("%d",&mode);
@@ -73,7 +73,7 @@ void main()
 				printf("Press 1 to add a book\n");
 				printf("Press 2 to print library content\n");
 				printf("Press 3 to delete a book\n");
-				printf("Press 4 to buy a copies of books");
+				printf("Press 4 to buy a copies of books\n");
 				scanf("%d",&Choise);
 				switch (Choise)
 				{
@@ -104,10 +104,13 @@ void main()
 		}
 	
 		
-		printf("\nEnter 1 to exit , 0 to continue: ");
-		scanf("%d",&exit);
+		printf("\nEnter 1 to exit , 0 to continue\n");
+		scanf(" %d",&exit);
+		if (exit == 1)
+			break;
 		
 	}
+	*/
 }
 
 
@@ -239,18 +242,19 @@ void ReArrange(char index)
 void Delete_Book()
 {
 	char NewBookID,index;
-	printf("Enter the book ID: ");	
+	printf("Enter the book ID you want to delete: ");	
 	scanf("%d",&NewBookID);
 	index = search(NewBookID);
 	if(index == -1)  //new book
 	{
-		printf("Sorry this book does not exist\n");
+		printf("Sorry this book does not exist\n\n");
 	}
 	else 
 	{
 		BookCounter--;
 		TotalBookCounter--;
 		ReArrange(index);
+		printf("deleted syccessfully \n\n");
 	}	
 }
 
@@ -265,6 +269,7 @@ void Buy_BookCopies()
 	scanf("%d",&copies);
 	BookArray[index].NumberOfCopies +=copies;
 	strcpy(BookArray[index].Status,"Available");
+	printf("A %d copies of this book has been added successfully\n\n",copies);
 }
 
 
