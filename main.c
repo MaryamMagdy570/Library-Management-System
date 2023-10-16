@@ -27,13 +27,14 @@ typedef struct
 typedef struct 
 {
 	Book_Info 	Book;
-	int 		NumberOfCopies;
+	char 		NumberOfCopies;
 	char 		Status[50];    //provided or needed
 }Library;
 
 Library BookArray[MAXMUM_SIZE];
 Library NullStruct = {};
-int BookCounter = 0;
+char BookCounter = 0;
+char TotalBookCounter = 0;
 
 
 
@@ -41,13 +42,16 @@ int BookCounter = 0;
 //start
 void main()
 {
+	
 	char Choise;
 	char password[4];
-	char mode,exit='\0';
+	char mode,exit=0;
 	printf("Hello, Welcome to BookArray Management System\n");
-
+/*
 	Add_Book();
+		Print_Library();
 	Add_Book();
+		Print_Library();
 	Add_Book();
 	Print_Library();
 	Borrow_Book();
@@ -55,9 +59,8 @@ void main()
 	Delete_Book();
 	Print_Library();
 	
-	
-/*
-	while(exit != 'e')
+	*/
+	while(!exit)
 	{
 		printf("Press 1 for administor mode, or 0 for user mode: ");
 		scanf("%d",&mode);
@@ -101,19 +104,24 @@ void main()
 		}
 	
 		
-		printf("\nEnter e to exit , otherwise to continue ..");
-		gets(&exit);
+		printf("\nEnter 1 to exit , 0 to continue: ");
+		scanf("%d",&exit);
+		
 	}
-*/
 }
 
 
-//Function1: Add Book
-
+/*Function1: Add Book
+ *check if the number of books in library exceeds the maxmum sizeof
+ *if there is empty place we can add new books
+ *the book ID should be unique 
+ *we use the new coming ID to check if this book already exists or not
+ *if the book exists the system only increases the number of copies
+ */
 void Add_Book()
 {
 	char NewBookID,index;
-	if (BookCounter == MAXMUM_SIZE)
+	if (TotalBookCounter == MAXMUM_SIZE)
 	{
 		printf("Sorry the linrary is Completed now \n");
 	}
@@ -127,10 +135,10 @@ void Add_Book()
 			BookArray[BookCounter].Book.ID = NewBookID;
 			
 			printf("Please Enter the BookTitle: ");
-			scanf("%s",&BookArray[BookCounter].Book.BookTitle);
+			scanf(" %[^\n]%*c",&BookArray[BookCounter].Book.BookTitle);
 			
 			printf("Please Enter the AutherName: ");
-			scanf("%s",&BookArray[BookCounter].Book.AutherName);
+			scanf(" %[^\n]%*c",&BookArray[BookCounter].Book.AutherName);
 			
 			printf("Please Enter the PublicationYear: ");
 			scanf("%d",&BookArray[BookCounter].Book.PublicationYear);
@@ -139,14 +147,19 @@ void Add_Book()
 			scanf("%f",&BookArray[BookCounter].Book.Price);
 
 			BookArray[BookCounter].NumberOfCopies = 1;
+			
 			strcpy(BookArray[BookCounter].Status,"Available");
 			
 			BookCounter++;
+			TotalBookCounter++;
+			printf("\nthe book has been added succesfully\n\n");
+
 		}
 		else  //new book
 		{
 			BookArray[index].NumberOfCopies ++;
-			printf("the book already exists, a new copy has been added\n");
+			TotalBookCounter++;
+			printf("\nthe book already exists, a new copy has been added\n\n");
 			strcpy(BookArray[index].Status,"Available");
 		}
 	}
@@ -155,7 +168,7 @@ void Add_Book()
 
 char search(char search_id)
 {
-	for (int i =0; i<=BookCounter; i++)
+	for (int i =0; i<BookCounter; i++)
 	{
 		if  (BookArray[i].Book.ID==search_id)
 			return i;
@@ -166,34 +179,36 @@ char search(char search_id)
 
 void Print_Library()
 {
+	printf("\nThe library contains the following books:\n\n");
 	for (int i =0; i<BookCounter; i++)
 	{
-		if(!strcmp(BookArray[i].Status,"Deleted"))
-			continue;
-		else
-		{
-			printf("Book %d Info:\n",i);
-			printf("ID: %s\n",BookArray[i].Book.ID);
-			printf("BookTitle: %s\n",BookArray[i].Book.BookTitle);
-			printf("AutherName: %s\n",BookArray[i].Book.AutherName);
-			printf("PublicationYear: %d\n",BookArray[i].Book.PublicationYear);
-			printf("NumberOfCopies: %d\n",BookArray[i].NumberOfCopies);
-			printf("Price: %f\n",BookArray[i].Book.Price);
-			printf("Status: %s\n",BookArray[i].Status);
-			printf("\n------------------------\n\n");
-		}
+		printf("Book %d Info:\n",i+1);
+		printf("ID: %d\n",BookArray[i].Book.ID);
+		printf("BookTitle: %s\n",BookArray[i].Book.BookTitle);
+		printf("AutherName: %s\n",BookArray[i].Book.AutherName);
+		printf("PublicationYear: %d\n",BookArray[i].Book.PublicationYear);
+		printf("NumberOfCopies: %d\n",BookArray[i].NumberOfCopies);
+		printf("Price: %f\n",BookArray[i].Book.Price);
+		printf("Status: %s\n",BookArray[i].Status);
+		printf("\n------------------------\n");
 	}
 }
 
 void Borrow_Book()
 {	
-	char NewBookID,index;
-	printf("Enter the book ID: ");	
+	char NewBookID,index,flag;
+	printf("\nEnter the ID of the book you want to borrow: \n");	
+	printf("You can print the library content if you don't know the ID of the book\n");
+	printf("do you want to print library content ? \n press 1 if yes, 0 if No");
+	scanf("%d",&flag);
+	if (flag)
+		Print_Library();
+	printf("Now enter the Book ID:");
 	scanf("%d",&NewBookID);
 	index = search(NewBookID);
 	if(index == -1)  //new book
 	{
-		printf("Sorry we don't have this book\n");
+		printf("Sorry this book doesn't exist\n\n");
 	}
 	else 
 	{
@@ -202,10 +217,15 @@ void Borrow_Book()
 			strcpy(BookArray[index].Status,"Available");
 		else 
 			strcpy(BookArray[index].Status,"Borrowed");
+		printf ("Please return the book before 2 weeks from now\n");
+		printf ("We wish you enjoy reading the book\n\n");
 	}	
+
+
 }
 
 
+// to shift the array elements after deleting a book
 void ReArrange(char index)
 {
 	for (int i =index; i<=BookCounter; i++)
@@ -229,6 +249,7 @@ void Delete_Book()
 	else 
 	{
 		BookCounter--;
+		TotalBookCounter--;
 		ReArrange(index);
 	}	
 }
