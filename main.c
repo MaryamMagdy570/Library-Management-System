@@ -36,33 +36,22 @@ Library NullStruct = {};
 char BookCounter = 0;
 char TotalBookCounter = 0;
 
-
+char exit_flag = 0;
+char Choise;
+char mode;
+char password[4];
 
 
 //start
 void main()
 {
-	
-	char Choise;
-	char password[4];
-	char mode,exit=0;
-	printf("Hello, Welcome to BookArray Management System\n");
 
-	Add_Book();
-		Print_Library();
-	Add_Book();
-		Print_Library();
-	Add_Book();
-	Print_Library();
-	Borrow_Book();
-	Print_Library();	
-	Delete_Book();
-	Print_Library();
 	
-	/*
+	printf("Hello, Welcome to BookArray Management System\n");
+ 
 	while(1)
 	{
-		printf("Press 1 for administor mode, or 0 for user mode: ");
+		printf("Press 1 for admin mode, or 0 for user mode: ");
 		scanf("%d",&mode);
 		if (mode)
 		{
@@ -74,6 +63,7 @@ void main()
 				printf("Press 2 to print library content\n");
 				printf("Press 3 to delete a book\n");
 				printf("Press 4 to buy a copies of books\n");
+				printf("Press 5 to exit the system\n");
 				scanf("%d",&Choise);
 				switch (Choise)
 				{
@@ -81,6 +71,7 @@ void main()
 					case 2: Print_Library();	break;
 					case 3: Delete_Book();		break;
 					case 4: Buy_BookCopies();	break;
+					case 5: exit_flag = 1;		break;
 					default: break;
 				}
 			}
@@ -94,23 +85,23 @@ void main()
 		{
 			printf("Press 1 to print library content\n");
 			printf("Press 2 to borrow a book\n");
+			printf("Press 3 to exit the system\n");
 			scanf("%d",&Choise);
 			switch (Choise)
 			{
 				case 1:	Print_Library();	break;
 				case 2: Borrow_Book();		break;
+				case 3: exit_flag =1;		break;
 				default: break;
 			}	
 		}
 	
-		
-		printf("\nEnter 1 to exit , 0 to continue\n");
-		scanf(" %d",&exit);
-		if (exit == 1)
+		if (exit_flag)
 			break;
 		
 	}
-	*/
+	
+	
 }
 
 
@@ -128,7 +119,7 @@ void Add_Book()
 	{
 		printf("Sorry the linrary is Completed now \n");
 	}
-	else
+	else 
 	{	
 		printf("Please Enter the Book ID: ");
 		scanf("%d",&NewBookID);
@@ -158,7 +149,7 @@ void Add_Book()
 			printf("\nthe book has been added succesfully\n\n");
 
 		}
-		else  //new book
+		else 
 		{
 			BookArray[index].NumberOfCopies ++;
 			TotalBookCounter++;
@@ -202,7 +193,7 @@ void Borrow_Book()
 	char NewBookID,index,flag;
 	printf("\nEnter the ID of the book you want to borrow: \n");	
 	printf("You can print the library content if you don't know the ID of the book\n");
-	printf("do you want to print library content ? \n press 1 if yes, 0 if No");
+	printf("do you want to print library content ? \n press 1 if yes, 0 if No \n");
 	scanf("%d",&flag);
 	if (flag)
 		Print_Library();
